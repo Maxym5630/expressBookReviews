@@ -21,49 +21,74 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-    res.send(JSON.stringify(books,null,4));
+    const myPromise = new Promise((resolve,reject) => {
+        const booksPromis = require("./booksdb.js");
+        resolve(booksPromis)
+    })
+    myPromise.then((books) => {
+        res.send(JSON.stringify(books,null,4));
+    })
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
+    const myPromise = new Promise((resolve,reject) => {
+        const booksPromis = require("./booksdb.js");
+        resolve(booksPromis)
+    })
     const ISBN = req.params.isbn;
-    res.send(books[ISBN])
+    myPromise.then((books) => {
+        res.send(books[ISBN])
+      })
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
     const author = req.params.author;
-    const validBooks = {};
-    let k = 0;
-    for (const key in books) {
-        if (books[key].author == author) {  
-            k++;
-            validBooks[key] = books[key];
+    const myPromise = new Promise((resolve,reject) => {
+        const booksPromis = require("./booksdb.js");
+        resolve(booksPromis)
+    })
+    myPromise.then((books) => {
+        const validBooks = {};
+        let k = 0;
+
+        for (const key in books) {
+            if (books[key].author == author) {  
+                k++;
+                validBooks[key] = books[key];
+            }
         }
-    }
-    if (k) {
-        res.send(JSON.stringify(validBooks,null,4));
-    } else {
-        res.status(404).json({message: "Books not found"});
-    }   
+        if (k) {
+            res.send(JSON.stringify(validBooks,null,4));
+        } else {
+            res.status(404).json({message: "Books not found"});
+        }
+    })
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
-    const validBooks = {};
-    let k = 0;
-    for (const key in books) {
-        if (books[key].title == title) {  
-            k++;
-            validBooks[key] = books[key];
+    const myPromise = new Promise((resolve,reject) => {
+        const booksPromis = require("./booksdb.js");
+        resolve(booksPromis)
+    })
+    myPromise.then((books) => {
+        const validBooks = {};
+        let k = 0;
+        for (const key in books) {
+            if (books[key].title == title) {  
+                k++;
+                validBooks[key] = books[key];
+            }
         }
-    }
-    if (k) {
-        res.send(JSON.stringify(validBooks,null,4));
-    } else {
-        res.status(404).json({message: "Books not found"});
-    }   
+        if (k) {
+            res.send(JSON.stringify(validBooks,null,4));
+        } else {
+            res.status(404).json({message: "Books not found"});
+        }
+    })   
 });
 
 //  Get book review
